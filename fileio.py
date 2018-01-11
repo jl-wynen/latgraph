@@ -2,6 +2,8 @@
 Routines to read and write lattices from and to files.
 """
 
+from pathlib import Path
+
 import numpy as np
 
 from lattice import Lattice, Site
@@ -70,3 +72,19 @@ def write_wnd(fname, lat):
                                "\t".join(map(str, site.pos)),
                                " ".join(map(lambda x: str(x+1), site.neighbours))))
         wndf.write("0")
+
+
+def read(fname):
+    suffix = Path(fname).suffix
+    if suffix == ".w3d":
+        return read_w3d(fname)
+    if suffix == ".w2d":
+        return read_w2d(fname)
+    raise ValueError("Unknown file extension: '{}'".format(suffix))
+
+def write(fname, lat):
+    suffix = Path(fname).suffix
+    if suffix == ".w3d" or suffix == ".w2d":
+        return write_wnd(fname, lat)
+    raise ValueError("Unknown file extension: '{}'".format(suffix))
+
