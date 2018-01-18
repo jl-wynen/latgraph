@@ -36,4 +36,6 @@ Depending on the label file, the program can get stuck and will abort in that ca
 
 ## Plotting
 Graphs can be drawn as 3D or 2D meshes.
-Use ``-p`` to plot the main graph and ``-P`` to plot the label graph (both after potential relabelling).
+Use ``-p`` to plot the main graph and ``-P`` to plot the label graph.
+In addition, the adjacency matrix can be plotted using the argument ``-a``.
+All plots show the state after relabelling if a labelfile was specified.
