@@ -1,5 +1,5 @@
 """
-
+Main program. Convert lattice file formats / relabel adjacency graphs.
 """
 
 import sys
@@ -9,7 +9,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-# import lattice
 import fileio
 
 def show_lattice(lat, name, labels=None):
@@ -38,7 +37,7 @@ def parse_args():
                      description="""
                      Convert lattice geometries between different file formats.
                      """,
-                     epilog="")
+                     epilog="See https://github.com/jl-wynen/latgraph")
     parser.add_argument("input", help="Input lattice file")
     parser.add_argument("-o", "--output", metavar="outfile", help="Output lattice file")
     parser.add_argument("-l", "--labels", metavar="labelfile",

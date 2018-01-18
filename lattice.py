@@ -4,7 +4,6 @@ Representation of a lattice.
 
 import numpy as np
 
-
 def angle(p1, p2):
     "Compute angle between p1 and p2; result is in (-pi, pi]"
     return (np.arctan2(p2[1], p2[0]) - np.arctan2(p1[1], p1[0]) + np.pi) % (2*np.pi) - np.pi
@@ -120,6 +119,7 @@ class Lattice:
                 raise RuntimeError("Graph search got stuck. No neighbours to continue\
  after labeling {} sites".format(i+1))
 
+            # go to next site
             cur = self.sites[cur].neighbours[idx[select_next(method, pos,
                                                              self.sites[cur], cen)]]
             labels[cur] = i
