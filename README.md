@@ -9,6 +9,9 @@ python latgraph.py infile -o outfile
 The file formats are deduced from the extensions; see list below.
 Use `python latgraph.py -h` to get a list of supported arguments.
 
+Some example files are included uder [lattices](lattices):
+- ``c60_ipr.w3d``, ``c60_ipr.w2d``: C60 fullerenes obeying the isolated pentagon rule. Generated using [CaGe](https://caagt.ugent.be/CaGe/).
+
 ## Supported Formats
 - writegraph3d [.w3d], writegraph2d [.w2d]
     - Adjacency graph
