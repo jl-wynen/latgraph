@@ -12,6 +12,8 @@ from mpl_toolkits.mplot3d import Axes3D
 import fileio
 
 def show_lattice(lat, name, labels=None):
+    "Show the lattice in its own figure using its 3D or 2D embedding."
+
     fig = plt.figure(figsize=(10, 10))
     if len(lat.sites[0].pos) == 3:
         ax = fig.add_subplot(111, projection="3d")
@@ -30,6 +32,22 @@ def show_lattice(lat, name, labels=None):
     ax.scatter((centre[0], ), (centre[1], ), marker="x", c="k")
     fig.tight_layout()
 
+def show_adjacency_matrix(lat, name):
+    "Show the adjacency matrix in its own figure."
+
+    fig = plt.figure(figsize=(5, 5))
+    ax = fig.add_subplot(111)
+    ax.set_title(name)
+
+    # fill matrix with hopping strengths
+    adj = np.zeros((len(lat), len(lat)), dtype=int)
+    for i, site in enumerate(lat):
+        for j, hop in zip(site.neighbours, site.hopping):
+            adj[i, j] = hop
+
+    ax.matshow(adj)
+    fig.tight_layout()
+
 def parse_args():
     "Parse command line arguments."
 
@@ -42,12 +60,14 @@ def parse_args():
     parser.add_argument("-o", "--output", metavar="outfile", help="Output lattice file")
     parser.add_argument("-l", "--labels", metavar="labelfile",
                         help="Relabel the graph according to embedding in given file")
+    parser.add_argument("-m", "--method", help="Method for relabelling.",
+                        default="anticlockwise", metavar="method")
     parser.add_argument("-p", "--plot", action="store_true",
                         help="Plot the graph (after relabelling)")
     parser.add_argument("-P", "--plot-labels", action="store_true",
                         help="Plot the label graph")
-    parser.add_argument("-m", "--method", help="Method for relabelling.",
-                        default="anticlockwise")
+    parser.add_argument("-a", "--plot_adjacency", action="store_true",
+                        help="Show the adjacency graph.")
     return parser.parse_args()
 
 def main():
@@ -76,10 +96,13 @@ def main():
         else:
             show_lattice(lat, args.input, np.arange(len(lat)))
 
+    if args.plot_adjacency:
+        show_adjacency_matrix(lat, "Adjacency matrix ({})".format(args.input))
+
     if args.output:
         fileio.write(args.output, lat)
 
-    if args.plot or args.plot_labels:
+    if args.plot or args.plot_labels or args.plot_adjacency:
         plt.show()
 
 if __name__ == "__main__":
