@@ -70,7 +70,7 @@ class Lattice:
 
     def centre(self):
         "Get centre position of lattice."
-        return sum(site.pos for site in self.sites)
+        return sum(site.pos for site in self.sites)/len(self.sites)
 
     def check_consistency(self):
         "Check whether all site indices are in bounds."
