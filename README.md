@@ -10,7 +10,8 @@ The file formats are deduced from the extensions; see list below.
 Use `python latgraph.py -h` to get a list of supported arguments.
 
 Some example files are included uder [lattices](lattices):
-- ``c60_ipr.w3d``, ``c60_ipr.w2d``: C60 fullerenes obeying the isolated pentagon rule. Generated using [CaGe](https://caagt.ugent.be/CaGe/).
+- ``c60_ipr.w3d``, ``c60_ipr.w2d``: C60 fullerene obeying the isolated pentagon rule. Generated using [CaGe](https://caagt.ugent.be/CaGe/).
+- ``c60_ipr_yml``: Like above but relabelled using the ``anticlockwise`` method. Contains some additional metadata.
 
 ## Requirements
 - Python 3
@@ -19,9 +20,17 @@ Some example files are included uder [lattices](lattices):
 
 ## Supported Formats
 - writegraph3d [.w3d], writegraph2d [.w2d]
-    - Adjacency graph
-    - 3D/2D positions
-    - *no* hopping strengths (defaults to 1)
+  - Adjacency graph
+  - 3D/2D positions
+  - *No* hopping strengths (defaults to 1)
+  - *No* information about time
+  - *No* metadata
+- YAML [.yml/.yaml]
+  - Adjacency graph
+  - 3D/2D positions
+  - Hopping strengths
+  - Number of time slices
+  - Name, comment metadata
 
 ## Relabelling
 Graphs can be relabelled to change the order of sites.
