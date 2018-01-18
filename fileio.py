@@ -127,7 +127,7 @@ def write_yaml(fname, lat):
 
 def _yaml_represent_lattice(dumper, lat):
     "Create a YAML representation of a Lattice using a !lattice node."
-    adj, hopping = zip(*[([site.idx, neigh], hop) for site in lat
+    adj, hopping = zip(*[([int(site.idx), int(neigh)], float(hop)) for site in lat
                          for (neigh, hop) in zip(site.neighbours, site.hopping)
                          if neigh > site.idx])
     pos = [list(map(float, site.pos)) for site in lat]
