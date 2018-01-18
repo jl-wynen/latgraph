@@ -54,7 +54,10 @@ class Site:
 class Lattice:
     "Represents a lattice."
 
-    def __init__(self):
+    def __init__(self, name="", comment="", nt=0):
+        self.name = name
+        self.comment = comment
+        self.nt = nt
         self.sites = []
 
     def __len__(self):
