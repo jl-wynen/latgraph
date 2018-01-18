@@ -47,6 +47,8 @@ def parse_args():
                         help="Plot the graph (after relabelling)")
     parser.add_argument("-P", "--plot-labels", action="store_true",
                         help="Plot the label graph")
+    parser.add_argument("-m", "--method", help="Method for relabelling.",
+                        default="anticlockwise")
     return parser.parse_args()
 
 def main():
@@ -62,7 +64,7 @@ def main():
         if not labelLat.check_consistency():
             print("Label lattice is inconsistent")
             sys.exit(1)
-        labels = labelLat.label_graph()
+        labels = labelLat.label_graph(args.method)
 
         if args.plot_labels:
             show_lattice(labelLat, "Label graph ({})".format(args.labels), labels)

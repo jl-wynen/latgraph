@@ -4,6 +4,29 @@ Representation of a lattice.
 
 import numpy as np
 
+
+def angle(p1, p2):
+    "Compute angle between p1 and p2; result is in (-pi, pi]"
+    return (np.arctan2(p2[1], p2[0]) - np.arctan2(p1[1], p1[0]) + np.pi) % (2*np.pi) - np.pi
+
+def select_innermost(pos, centre):
+    "Select site clostest to centre."
+    return np.argmin([np.linalg.norm(centre-p) for p in pos])
+
+def select_anticlockwise(pos, curpos):
+    "Select next site in anti-clockwise order."
+    return np.argmax([angle(curpos, p) for p in pos])
+
+def select_next(method, pos, cursite, centre):
+    "Select next site from list of positions."
+
+    if method == "innermost":
+        return select_innermost(pos, centre)
+    if method == "anticlockwise":
+        return select_anticlockwise(pos, cursite.pos)
+    raise KeyError("Unknown traveral method: "+method+". Supported methods are:\
+ innermost, anticlockwise")
+
 class Site:
     """
     A single lattice site.
@@ -67,7 +90,7 @@ class Lattice:
 
         return True
 
-    def label_graph(self):
+    def label_graph(self, method):
         """
         Generate a list of labels (indices) for lattice sites. The labels spiral
         outward from the centre.
@@ -89,16 +112,16 @@ class Lattice:
         visited[cur] = True
         for i in range(1, len(self.sites)):
             try:
-                # get all indices and radii of neighbours of cur that have not been visited
-                idx, rad = zip(*[(j, radii[n])
+                # get all indices and positions of neighbours of cur that have not been visited
+                idx, pos = zip(*[(j, self.sites[n].pos)
                                  for j, n in enumerate(self.sites[cur].neighbours)
                                  if not visited[n]])
             except ValueError:
                 raise RuntimeError("Graph search got stuck. No neighbours to continue\
  after labeling {} sites".format(i+1))
 
-            # move to site closest to centre
-            cur = self.sites[cur].neighbours[idx[np.argmin(rad)]]
+            cur = self.sites[cur].neighbours[idx[select_next(method, pos,
+                                                             self.sites[cur], cen)]]
             labels[cur] = i
             visited[cur] = True
         return labels
