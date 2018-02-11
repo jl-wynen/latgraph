@@ -20,6 +20,7 @@ def show_lattice(lat, name, labels=None):
     else:
         ax = fig.add_subplot(111)
     ax.set_title(name)
+    ax.axis("equal")
 
     for site in lat:
         for neigh in site.neighbours:
@@ -35,9 +36,10 @@ def show_lattice(lat, name, labels=None):
 def show_adjacency_matrix(lat, name):
     "Show the adjacency matrix in its own figure."
 
-    fig = plt.figure(figsize=(5, 5))
+    fig = plt.figure(figsize=(7, 5))
     ax = fig.add_subplot(111)
     ax.set_title(name)
+    ax.axis("equal")
 
     # fill matrix with hopping strengths
     adj = np.zeros((len(lat), len(lat)), dtype=int)
