@@ -35,13 +35,31 @@ class Site:
         pos - (np.array) 2D or 3D position of the site.
         neighbours - List of indices of neighbouring sites.
         hopping - List of hopping strengths to sites listed in neighbours.
+        Additional attributes can be stored using the member dict _attributes.
     """
 
-    def __init__(self, idx, pos, neighbours, hopping):
+    def __init__(self, idx, pos, neighbours=[], hopping=[], **attrs):
         self.idx = idx
         self.pos = pos
         self.neighbours = neighbours
         self.hopping = hopping
+        self._attributes = attrs
+
+    def has_attribute(self, attr):
+        "Return True if this Site has an attribute called attr; False otherwise."
+        return attr in self._attributes.keys()
+
+    def __getitem__(self, attr):
+        "Return an attribute."
+        return self._attributes[attr]
+
+    def __setitem__(self, attr, value):
+        "Set an attribute."
+        self._attributes[attr] = value
+
+    def attributes(self):
+        "Return an iterator over key, value pairs of attributes."
+        return self._attributes.items()
 
     def relabel(self, labels):
         """
