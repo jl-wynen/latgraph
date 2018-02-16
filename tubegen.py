@@ -4,11 +4,83 @@ Generator for carbon nano tubes.
 
 from math import gcd
 import itertools
+import argparse
+import textwrap
 
 import numpy as np
 
 import lattice
 
+def _define_parser():
+    "Define command line argument parser for TubeGen."
+
+    parser = argparse.ArgumentParser(prog="latgraph --generate tube",
+                                     formatter_class=argparse.RawDescriptionHelpFormatter,
+                                     description=textwrap.dedent("""\
+                Generate a carbon nano tube of given chirality and length.
+                                     
+                Boundary conditions may be (default: periodic)
+                    - o / open
+                    - p / periodic
+                                     """))
+    parser.add_argument("chirality", type=lambda s: tuple(map(int, s.split(","))),
+                        help="Chirality of the tube, specify as n,m")
+    parser.add_argument("length", type=int, help="Number of unit cells in the tube")
+    parser.add_argument("--bc_ch", default="periodic",
+                        help="Boundary condition along the circumference")
+    parser.add_argument("--bc_t", default="periodic",
+                        help="Boundary condition alogn the tube")
+    parser.add_argument("--emb", default="3d", help="Embedding, can be 2d or 3d")
+    parser.add_argument("--spacing", type=float, default="1", help="Lattice spacing")
+    parser.add_argument("--name", default="", help="Name for the lattice")
+    parser.add_argument("--comment", default="", help="Comment on the lattice")
+    return parser
+
+def _parse_args(in_args):
+    "parse command line arguments for TubeGen."
+
+    parser = _define_parser()
+    args = parser.parse_args(in_args)
+
+    # normalize and check arguments
+    args.emb = args.emb.lower()
+    if args.emb not in ("2d", "3d"):
+        parser.error("Unknown embedding: {}".format(args.emb))
+
+    args.bc_ch = args.bc_ch.lower()
+    if args.bc_ch == "p":
+        args.bc_ch = "periodic"
+    elif args.bc_ch == "o":
+        args.bc_ch = "open"
+    if args.bc_ch not in ("periodic", "open"):
+        parser.error("Unknown boundary condition for bc_ch: {}".format(args.bc_ch))
+
+    args.bc_t = args.bc_t.lower()
+    if args.bc_t == "p":
+        args.bc_t = "periodic"
+    elif args.bc_t == "o":
+        args.bc_t = "open"
+    if args.bc_t not in ("periodic", "open"):
+        parser.error("Unknown boundary condition for bc_t: {}".format(args.bc_t))
+
+    return args
+
+def run(in_args):
+    "Run TubeGen from command line arguments."
+
+    args = _parse_args(in_args)
+    gen = TubeGen(args.chirality, args.spacing)
+
+    lat = gen.make_ribbon(args.length, args.bc_ch, args.bc_t)
+    if args.emb == "3d":
+        lat = gen.roll_tube(lat)
+
+    if args.name:
+        lat.name = args.name
+    if args.comment:
+        lat.comment = args.comment
+
+    return lat
 
 class TubeGen:
     """
@@ -103,7 +175,7 @@ class TubeGen:
         ucell = self._make_ucell()
 
         # replicate unit cell along T
-        ribbon = lattice.Lattice()
+        ribbon = lattice.Lattice(name="Ribbon ({}, {})".format(*self.chirality))
         for i in range(n_ucells):
             shifted = lattice.shifted_lattice(ucell, i*T)
             for site in shifted:
