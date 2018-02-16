@@ -66,6 +66,12 @@ def read_w2d(fname):
 def write_wnd(fname, lat):
     "Write a 2D / 3D lattice to a writegraph2d / writegraph3d file."
 
+    suffix = Path(fname).suffix
+    expected_suffix = ".w{}d".format(len(lat.sites[0].pos))
+    if suffix != expected_suffix:
+        raise RuntimeError("Wrong file suffix for writing writegraph file.\nExpected: {} got {}" \
+                           .format(expected_suffix, suffix))
+
     with open(fname, "w") as wndf:
         wndf.write(">>writegraph{}d<<\n".format(len(lat.sites[0].pos)))
 
