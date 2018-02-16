@@ -2,6 +2,7 @@
 Representation of a lattice.
 """
 
+from copy import deepcopy
 import numpy as np
 
 def angle(p1, p2):
@@ -25,6 +26,14 @@ def select_next(method, pos, cursite, centre):
         return select_anticlockwise(pos, cursite.pos)
     raise KeyError("Unknown traveral method: "+method+". Supported methods are:\
  innermost, anticlockwise")
+
+def shifted_lattice(lat, vec):
+    "Retrun a copy of a lattice shifted by a given vector."
+    shifted = deepcopy(lat)
+    for site in shifted:
+        site.pos += vec
+    return shifted
+
 
 class Site:
     """
@@ -85,6 +94,18 @@ class Lattice:
     def __iter__(self):
         "Iterates over sites."
         return iter(self.sites)
+
+    def __setitem__(self, attr, value):
+        "Set an attribute for all sites in the lattice."
+        for site in self.sites:
+            site[attr] = value
+
+    def at(self, pos, PREC=1e-13):
+        "Return the site at a given position."
+        for site in self.sites:
+            if np.max(np.abs(pos-site.pos)) < PREC:
+                return site
+        return None
 
     def centre(self):
         "Get centre position of lattice."
