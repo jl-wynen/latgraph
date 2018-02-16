@@ -1,12 +1,8 @@
 # latgraph
-Utilities for converting and manipulating files containing lattices.
+Utilities for creating, converting, and manipulating files containing lattices.
 
-This is a program to read and write lattices from/to different file formats and manipulate them in the process.
-A file can be converted using
-```Shell
-python latgraph.py infile -o outfile
-```
-The file formats are deduced from the extensions; see list below.
+This program can read and write lattices from/to different file formats and manipulate them in the process.
+Alternatively, new lattices can be generated.
 Use `python latgraph.py -h` to get a list of supported arguments.
 
 Some example files are included under [lattices](lattices):
@@ -19,7 +15,31 @@ Some example files are included under [lattices](lattices):
 - Matplotlib
 - PyYaml
 
+## Generating
+Lattices can be generated using `python latgraph.py --generate <gen>`, where `<gen>` is the name of a supported generator.
+Currently, only `tube` is supported for generating carbon nano tubes.
+
+All arguments specified after `--generate <gen>` are passed directly to the generator. Any of the base argments need to be specified before generate. Use `--generate <gen> -h` to get generator specific help.
+
+### Tube
+This generator creates carbon nano tubes. Call it via
+```
+python latgraph.py -o tube.yml --generate tube 2,3 5
+```
+The first set of arguments (`2,3`, no spaces!) is the chirality of the tube.
+The second argument (`5`) is the number of unit cells along the tube.
+Important optional arguments are
+- `--bc_sh`, `--bc_t` for boundary conditions along circumference and tube, respectively. Supported values are `[o]pen` and `[p]eriodic`, default is `periodic`
+- `--emb` for the desired embedding; can be `2d` or `3d`.
+
+The tube generator can also be used to create nano ribbons by specifying a 2D embedding (and open boundary conditions in this example):
+```
+python latgraph.py -o ribbon.yml --generate tube 3,3 10 --bc_ch=o --bc_t=o --emb=2d --comment="Hey a ribbon!"
+```
+Note however that the size of the ribbon must be set via the cirality and the number of tube(!) unit cells, not the number of hexagons.
+
 ## Supported Formats
+Formats are deduced from file suffixes, see brackets below.
 - writegraph3d [.w3d], writegraph2d [.w2d]
   - Adjacency graph
   - 3D/2D positions
