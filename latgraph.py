@@ -95,12 +95,12 @@ def show_lattice(lat, labels=None):
     ax.scatter((centre[0], ), (centre[1], ), marker="x", c="k")
     fig.tight_layout()
 
-def show_adjacency_matrix(lat, name):
+def show_adjacency_matrix(lat):
     "Show the adjacency matrix in its own figure."
 
     fig = plt.figure(figsize=(7, 5))
     ax = fig.add_subplot(111)
-    ax.set_title(name)
+    ax.set_title("Adjacency matrix for {}".format(lat.name))
     ax.axis("equal")
 
     # fill matrix with hopping strengths
@@ -151,7 +151,7 @@ def main():
             show_lattice(lat, np.arange(len(lat)))
 
     if args.plot_adjacency:
-        show_adjacency_matrix(lat, "Adjacency matrix ({})".format(args.infile))
+        show_adjacency_matrix(lat)
 
     if args.output:
         fileio.write(args.output, lat)
