@@ -140,7 +140,7 @@ def main():
         labels = labelLat.label_graph(args.method)
 
         if args.plot_labels:
-            show_lattice(labelLat, "Label graph ({})".format(args.labels), labels)
+            show_lattice(labelLat, labels)
 
         lat.relabel(labels)
 
