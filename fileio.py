@@ -97,7 +97,7 @@ def _append_adj_hop(site, neigh, hop):
         site.neighbours.append(neigh)
         site.hopping.append(hop)
 
-def _parse_yaml(nt, adjacency, hopping, positions, name="", comment=""):
+def _parse_yaml(adjacency, hopping, positions, nt=0, name="", comment=""):
     "Parse a !lattice YAML node."
 
     # turn hopping into a list if it isn't already
