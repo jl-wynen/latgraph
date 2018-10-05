@@ -93,7 +93,6 @@ def show_lattice(lat, labels=None):
 
     centre = lat.centre()
     ax.scatter((centre[0], ), (centre[1], ), marker="x", c="k")
-    fig.tight_layout()
 
 def show_adjacency_matrix(lat):
     "Show the adjacency matrix in its own figure."
