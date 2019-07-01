@@ -18,7 +18,7 @@ def _define_parser():
                                      formatter_class=argparse.RawDescriptionHelpFormatter,
                                      description=textwrap.dedent("""\
                 Generate a carbon nano tube of given chirality and length.
-                                     
+
                 Boundary conditions may be (default: periodic)
                     - o / open
                     - p / periodic
@@ -100,7 +100,7 @@ class TubeGen:
       - Tube: First create a ribbon and then call TubeGen.roll_tube().
 
     Supported boundary conditions are "periodic" and "open". They can be specified
-    for Ch and T directions speparately via bc_ch and bc_t, respectively.
+    for Ch and T directions separately via bc_ch and bc_t, respectively.
     """
 
     def __init__(self, chirality, spacing):
@@ -244,7 +244,7 @@ Symmetry Vector:     ({sv1}, {sv2})""".format(
     tv1=T[0], tv2=T[1],
     sv1=R[0], sv2=R[1]
 )
-    
+
     def _padded_lattice(self, lat):
         """
         Pad a given lattice by surrounding it with copies of the input.
@@ -275,7 +275,7 @@ Symmetry Vector:     ({sv1}, {sv2})""".format(
         Uses fully periodic boundary conditions.
         Hopping strenghts are set to 1.
 
-        All sites are given extra attributes called 'cross_ch_boudnary' and
+        All sites are given extra attributes called 'cross_ch_boundary' and
         'cross_t_boundary' that are lists which indicate whether a nearest neighbour
         connection crosses the Ch or T boundary (values are 0, +1, -1).
         """
