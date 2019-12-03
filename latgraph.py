@@ -12,12 +12,12 @@ from mpl_toolkits.mplot3d import Axes3D
 
 import fileio
 import tubegen
-
+import agnrgen
 
 # List all available generators here.
 # Each generator must have a 'run' function that takes command line arguments
 # as its sole parameter and returns a lattice.
-GENERATORS = {"tube": tubegen}
+GENERATORS = {"tube": tubegen, "agnr": agnrgen}
 
 def define_parser():
     "Define the main command line argument parser"
@@ -82,7 +82,7 @@ def show_lattice(lat, labels=None):
     else:
         ax = fig.add_subplot(111)
     ax.set_title(lat.name)
-    ax.axis("equal")
+
 
     for site in lat:
         for neigh in site.neighbours:
