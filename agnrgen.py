@@ -57,7 +57,7 @@ class AGNRgen:
     """
     def __init__(self, dimer, n_hex, spacing):
         self.dimer = dimer
-        self.length = n_hex*4 #number of sites on one dimer line (in horizontal direction)
+        self.length = n_hex*2 #number of sites on one dimer line (in horizontal direction)
         self.spacing = spacing
         
     def unit_vectors(self):
