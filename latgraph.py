@@ -83,7 +83,6 @@ def show_lattice(lat, labels=None):
         ax = fig.add_subplot(111)
     ax.set_title(lat.name)
 
-
     for site in lat:
         for neigh in site.neighbours:
             if neigh > site.idx:
