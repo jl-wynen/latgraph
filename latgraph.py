@@ -13,11 +13,16 @@ from mpl_toolkits.mplot3d import Axes3D
 import fileio
 import tubegen
 import agnrgen
+import zgnrgen
 
 # List all available generators here.
 # Each generator must have a 'run' function that takes command line arguments
 # as its sole parameter and returns a lattice.
-GENERATORS = {"tube": tubegen, "agnr": agnrgen}
+GENERATORS = {
+    "tube": tubegen,
+    "agnr": agnrgen,
+    "zgnr": zgnrgen
+}
 
 def define_parser():
     "Define the main command line argument parser"
