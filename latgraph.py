@@ -10,10 +10,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-import fileio
-import tubegen
+
 import agnrgen
+import fileio
+import pyramidgen
+import tubegen
 import zgnrgen
+
 
 # List all available generators here.
 # Each generator must have a 'run' function that takes command line arguments
@@ -21,7 +24,8 @@ import zgnrgen
 GENERATORS = {
     "tube": tubegen,
     "agnr": agnrgen,
-    "zgnr": zgnrgen
+    "zgnr": zgnrgen,
+    "pyramid": pyramidgen,
 }
 
 def define_parser():
