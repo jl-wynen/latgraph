@@ -78,7 +78,7 @@ def make_triangle_tiling(cols, rows, first, spacing, name, comment):
                                    filter(lambda t: boundary_filter(t, y),
                                           _nearest_neighbours(x, y, first))))
             hoppings = [1]*len(neighbours)
-            lat.sites.append(Site(_total_index(x, y, cols, first), pos, neighbours))
+            lat.sites.append(Site(_total_index(x, y, cols, first), pos, neighbours, hoppings))
 
     assert lat.check_consistency()
     return lat
