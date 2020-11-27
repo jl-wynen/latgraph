@@ -14,6 +14,7 @@ from mpl_toolkits.mplot3d import Axes3D
 import agnrgen
 import fileio
 import pyramidgen
+import trianglegen
 import tubegen
 import zgnrgen
 
@@ -26,6 +27,7 @@ GENERATORS = {
     "agnr": agnrgen,
     "zgnr": zgnrgen,
     "pyramid": pyramidgen,
+    "triangle": trianglegen,
 }
 
 def define_parser():
