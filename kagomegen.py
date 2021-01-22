@@ -24,7 +24,7 @@ def _define_parser():
     parser.add_argument("rows", type=int, help="Number of stacked rows.")
     parser.add_argument("boundary_condition", type=int, choices=(1, 0),
                         help="Boundary condition --periodic=1,open=0")
-    #parser.add_argument("--spacing", type=float, default=1.0, help="Lattice spacing.")
+    parser.add_argument("--spacing", type=float, default=1.0, help="Lattice spacing.")
     parser.add_argument("--name", default="", help="Name for the lattice")
     parser.add_argument("--comment", default="", help="Comment on the lattice")
     return parser
@@ -39,11 +39,11 @@ def run(in_args):
     else:
         print("Lattice with out periodic boundary conditions")
 
-    return make_kagome(args.cols, args.rows, args.boundary_condition,
+    return make_kagome(args.cols, args.rows, args.boundary_condition,args.spacing,
                        args.name, args.comment)
 
 
-def position(Lx, Ly, trans):
+def position(Lx, Ly, trans,spacing):
 
     a = []  # position of lattice a
     b = []  # position of lattice b
@@ -56,11 +56,11 @@ def position(Lx, Ly, trans):
     for i in range(size):
         if i % Lx == 0 and i != 0:
             s = s+2
-        a.append([0 + (i % Lx+s)*trans[0], 0 + i % Ly*trans[1]])
+        a.append([0 + (i % Lx+s)*trans[0]*spacing, 0 + i % Ly*trans[1]]*spacing)
         sites.append(a[-1])
-        b.append([1 + (i % Lx+s)*trans[0], 0 + i % Ly*trans[1]])
+        b.append([1 + (i % Lx+s)*trans[0]*spacing, 0 + i % Ly*trans[1]]*spacing)
         sites.append(b[-1])
-        c.append([0.5 + (i % Lx+s)*trans[0], 0.5*np.sqrt(3) + i % Ly*trans[1]])
+        c.append([0.5 + (i % Lx+s)*trans[0]*spacing, 0.5*np.sqrt(3) + i % Ly*trans[1]]*spacing)
         sites.append(c[-1])
     return a, b, c, sites
 
@@ -103,7 +103,7 @@ def _finding_index(boundary):
 
 
 def adjacencyList(Lx, Ly, site_pos, sites, boundary_ind_a, boundary_ind_b, boundary_ind_c, periodic):
-
+    neighbour_index =[]
     adjacency_list = []
     v1 = v2 = v3 = v4 = v5 = v6 = 0
     for i in range(len(site_pos)):
@@ -144,6 +144,7 @@ def adjacencyList(Lx, Ly, site_pos, sites, boundary_ind_a, boundary_ind_b, bound
                         ind.append(boundary_ind_b[v6])
                         v6 = v6+1
             ind.sort()
+            neighbour_index.append(ind)
             # if len(ind) !=4:
             #     print('bad')
             # else:
@@ -154,10 +155,10 @@ def adjacencyList(Lx, Ly, site_pos, sites, boundary_ind_a, boundary_ind_b, bound
                 adjacency_list.append([i, k])
 
     adjacency_list = np.array(adjacency_list)
-    return adjacency_list
+    return neighbour_index, adjacency_list
 
 
-def make_kagome(Lx, Ly, periodic, name, comment):
+def make_kagome(Lx, Ly, periodic,spacing, name, comment):
 
     lat = Lattice(name, comment)
     size = Lx*Ly
@@ -165,7 +166,7 @@ def make_kagome(Lx, Ly, periodic, name, comment):
 
     # translation vector
     trans = [1.0, np.sqrt(3)]
-    a, b, c, sites = position(Lx, Ly, trans)
+    a, b, c, sites = position(Lx, Ly, trans,spacing)
     site_pos = nearest_neighbours(size, a, b, c)
     # boundary sites
     boundary_sites_a = sites[0::Lx*3]+sites[0:Ly*3:3]
@@ -176,13 +177,14 @@ def make_kagome(Lx, Ly, periodic, name, comment):
     boundary_ind_b = _finding_index(boundary_sites_b)
     boundary_ind_c = _finding_index(boundary_sites_c)
 
-    adjacency = adjacencyList(Lx, Ly,
+    neighbour_index, adjacency = adjacencyList(Lx, Ly,
                               site_pos, sites, boundary_ind_a, boundary_ind_b, boundary_ind_c, periodic)
     # hopping matrix of equal amplitude
     hopping_matrix = np.ones(len(adjacency))
     positions = np.zeros((num_sites, 3))
     positions[:, :-1] = sites  # making 3-dim
-
-    lat.sites.append(Site(adjacency, positions, hopping_matrix))
+    for i in range(len(sites)):
+        hoppings = hopping_matrix[:len(neighbour_index[i])]
+        lat.sites.append(Site(i,positions[i],neighbour_index[i],hoppings))
 
     return lat
