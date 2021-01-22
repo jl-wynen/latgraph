@@ -17,7 +17,7 @@ import pyramidgen
 import trianglegen
 import tubegen
 import zgnrgen
-
+import kagomegen
 
 # List all available generators here.
 # Each generator must have a 'run' function that takes command line arguments
@@ -28,7 +28,7 @@ GENERATORS = {
     "zgnr": zgnrgen,
     "pyramid": pyramidgen,
     "triangle": trianglegen,
-}
+    "kagome": kagomegen}
 
 def define_parser():
     "Define the main command line argument parser"
