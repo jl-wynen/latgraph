@@ -28,7 +28,7 @@ GENERATORS = {
     "zgnr": zgnrgen,
     "pyramid": pyramidgen,
     "triangle": trianglegen,
-}
+    "kagome":kagomegen}
 
 def define_parser():
     "Define the main command line argument parser"
