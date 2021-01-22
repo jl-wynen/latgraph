@@ -43,12 +43,11 @@ def run(in_args):
                        args.name, args.comment)
 
 
-def position(Lx, Ly, trans,spacing):
+def position(Lx, Ly, trans):
 
     a = []  # position of lattice a
     b = []  # position of lattice b
     c = []  # position of lattice c
-    global sites
     sites = []  # position of all lattice sites in the order a,b,c
     s = 0
     size = Lx*Ly
@@ -56,11 +55,11 @@ def position(Lx, Ly, trans,spacing):
     for i in range(size):
         if i % Lx == 0 and i != 0:
             s = s+2
-        a.append([0 + (i % Lx+s)*trans[0]*spacing, 0 + i % Ly*trans[1]]*spacing)
+        a.append([0 + (i % Lx+s)*trans[0], 0 + i % Ly*trans[1]])
         sites.append(a[-1])
-        b.append([1 + (i % Lx+s)*trans[0]*spacing, 0 + i % Ly*trans[1]]*spacing)
+        b.append([1 + (i % Lx+s)*trans[0], 0 + i % Ly*trans[1]])
         sites.append(b[-1])
-        c.append([0.5 + (i % Lx+s)*trans[0]*spacing, 0.5*np.sqrt(3) + i % Ly*trans[1]]*spacing)
+        c.append([0.5 + (i % Lx+s)*trans[0], 0.5*np.sqrt(3) + i % Ly*trans[1]])
         sites.append(c[-1])
     return a, b, c, sites
 
@@ -124,9 +123,10 @@ def adjacencyList(Lx, Ly, site_pos, sites, boundary_ind_a, boundary_ind_b, bound
                     if i < (Lx*3*(Ly-1)+1):
                         ind.append(boundary_ind_c[Ly+v1])
                         v1 = v1+1
-                    if i >= (Lx*3*(Ly-1)+1):
-                        ind.append(boundary_ind_a[Lx+v2])
+                    else:
                         ind.append(boundary_ind_c[Ly+v1])
+                        ind.append(boundary_ind_a[Lx+v2])
+                        v1 = -Ly + v2
                         v2 = v2+1
                 elif i in boundary_ind_a:
                     if i <= (Ly*3-1):
@@ -165,8 +165,8 @@ def make_kagome(Lx, Ly, periodic,spacing, name, comment):
     num_sites = size*3
 
     # translation vector
-    trans = [1.0, np.sqrt(3)]
-    a, b, c, sites = position(Lx, Ly, trans,spacing)
+    trans =list(np.array([1.0, np.sqrt(3)])*spacing)
+    a, b, c, sites = position(Lx, Ly, trans)
     site_pos = nearest_neighbours(size, a, b, c)
     # boundary sites
     boundary_sites_a = sites[0::Lx*3]+sites[0:Ly*3:3]
