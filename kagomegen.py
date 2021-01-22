@@ -65,7 +65,7 @@ def position(Lx, Ly, trans):
     return a, b, c, sites
 
 
-def nearest_neighbours(a, b, c):
+def nearest_neighbours(size, a, b, c):
     # arrays to get nearest neighbour connections
     ne_a = np.array(
         [[1.0, 0.0], [-1.0, 0.0], [0.5, np.sqrt(3)*0.5], [-0.5, -np.sqrt(3)*0.5]])
@@ -102,7 +102,7 @@ def _finding_index(boundary):
     return ind
 
 
-def adjacencyList(site_pos, sites, boundary_ind_a, boundary_ind_b, boundary_ind_c, periodic):
+def adjacencyList(Lx, Ly, site_pos, sites, boundary_ind_a, boundary_ind_b, boundary_ind_c, periodic):
 
     adjacency_list = []
     v1 = v2 = v3 = v4 = v5 = v6 = 0
@@ -158,9 +158,7 @@ def adjacencyList(site_pos, sites, boundary_ind_a, boundary_ind_b, boundary_ind_
 
 
 def make_kagome(Lx, Ly, periodic, name, comment):
-    global Lx, Ly, size, num_sites
-    Lx = Lx
-    Ly = Ly
+
     lat = Lattice(name, comment)
     size = Lx*Ly
     num_sites = size*3
@@ -168,7 +166,7 @@ def make_kagome(Lx, Ly, periodic, name, comment):
     # translation vector
     trans = [1.0, np.sqrt(3)]
     a, b, c, sites = position(Lx, Ly, trans)
-    site_pos = nearest_neighbours(a, b, c)
+    site_pos = nearest_neighbours(size, a, b, c)
     # boundary sites
     boundary_sites_a = sites[0::Lx*3]+sites[0:Ly*3:3]
     boundary_sites_b = sites[1::Lx*3]+sites[-(Ly*3-1)::3]
@@ -178,8 +176,8 @@ def make_kagome(Lx, Ly, periodic, name, comment):
     boundary_ind_b = _finding_index(boundary_sites_b)
     boundary_ind_c = _finding_index(boundary_sites_c)
 
-    adjacency = adjacencyList(
-        site_pos, sites, boundary_ind_a, boundary_ind_b, boundary_ind_c, periodic)
+    adjacency = adjacencyList(Lx, Ly,
+                              site_pos, sites, boundary_ind_a, boundary_ind_b, boundary_ind_c, periodic)
     # hopping matrix of equal amplitude
     hopping_matrix = np.ones(len(adjacency))
     positions = np.zeros((num_sites, 3))
