@@ -88,7 +88,7 @@ def nearest_neighbours(size, a, b, c):
     return site_pos
 
 
-def _finding_index(boundary):
+def _finding_index(boundary,sites):
     ind = []
     for i in boundary:
         # finding the index of the boundary sites in sites[]
@@ -145,6 +145,9 @@ def adjacencyList(Lx, Ly, site_pos, sites, boundary_ind_a, boundary_ind_b, bound
                         v6 = v6+1
             ind.sort()
             neighbour_index.append(ind)
+        else:
+            ind.sort()
+            neighbour_index.append(ind)
             # if len(ind) !=4:
             #     print('bad')
             # else:
@@ -173,18 +176,18 @@ def make_kagome(Lx, Ly, periodic,spacing, name, comment):
     boundary_sites_b = sites[1::Lx*3]+sites[-(Ly*3-1)::3]
     boundary_sites_c = sites[2:(Ly*3):3]+sites[(Ly*3)-1::(Lx*3)]
 
-    boundary_ind_a = _finding_index(boundary_sites_a)
-    boundary_ind_b = _finding_index(boundary_sites_b)
-    boundary_ind_c = _finding_index(boundary_sites_c)
+    boundary_ind_a = _finding_index(boundary_sites_a,sites)
+    boundary_ind_b = _finding_index(boundary_sites_b,sites)
+    boundary_ind_c = _finding_index(boundary_sites_c,sites)
 
     neighbour_index, adjacency = adjacencyList(Lx, Ly,
                               site_pos, sites, boundary_ind_a, boundary_ind_b, boundary_ind_c, periodic)
-    # hopping matrix of equal amplitude
-    hopping_matrix = np.ones(len(adjacency))
+   
+    #hopping_matrix = np.ones(len(adjacency))
     positions = np.zeros((num_sites, 3))
     positions[:, :-1] = sites  # making 3-dim
     for i in range(len(sites)):
-        hoppings = hopping_matrix[:len(neighbour_index[i])]
+        hoppings = [1]*len(neighbour_index[i]) # hopping matrix of equal amplitude
         lat.sites.append(Site(i,positions[i],neighbour_index[i],hoppings))
 
     return lat
